@@ -352,16 +352,15 @@
     }
 
     .question-box {
-      font-size: 24px;
+      font-size: 23px;
       color: #1e293b;
       margin-bottom: 22px;
-      line-height: 1.5;
+      line-height: 1.55;
       word-break: keep-all;
-      min-height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      white-space: normal;
+      min-height: 56px;
+      display: block;
+      text-align: center;
+      width: 100%;
     }
 
     /* 객관식 (4지선다) 보기 그리드 */
@@ -471,6 +470,8 @@
       font-size: 15px;
       color: #701a75;
       margin-bottom: 12px;
+      text-align: center;
+      line-height: 1.5;
     }
     .letter-slots-wrap {
       display: flex;
@@ -505,11 +506,15 @@
       display: flex;
       gap: 10px;
       justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto;
     }
     .quiz-input-text {
       flex: 1;
-      max-width: 380px;
-      padding: 14px 20px;
+      min-width: 0;
+      padding: 13px 18px;
       border-radius: 50px;
       border: 3px solid #f0abfc;
       font-size: 20px;
@@ -518,18 +523,27 @@
       text-align: center;
       font-weight: 700;
       text-transform: lowercase;
+      box-shadow: 0 4px 14px rgba(240, 171, 252, 0.2);
+    }
+    .quiz-input-text::placeholder {
+      font-size: 14px;
+      font-weight: 600;
+      color: #c084fc;
+      letter-spacing: -0.3px;
     }
     .quiz-input-text:focus {
       border-color: #d946ef;
-      box-shadow: 0 0 0 4px rgba(217, 70, 239, 0.15);
+      box-shadow: 0 0 0 4px rgba(217, 70, 239, 0.2);
     }
     .submit-pill-btn {
+      flex-shrink: 0;
+      white-space: nowrap;
       background: linear-gradient(135deg, #c026d3, #9333ea);
       color: white;
       border: none;
       border-radius: 50px;
-      padding: 14px 28px;
-      font-size: 19px;
+      padding: 13px 26px;
+      font-size: 18px;
       font-family: 'Jua', sans-serif;
       cursor: pointer;
       box-shadow: 0 6px 18px rgba(192, 38, 211, 0.35);
@@ -1061,7 +1075,7 @@
         <div class="letter-info-line" id="letter-count-info">총 3글자 (첫 글자 'D' / 끝 글자 'G')</div>
         <div class="letter-slots-wrap" id="letter-slots-container"></div>
         <div class="input-row">
-          <input type="text" class="quiz-input-text" id="short-input" placeholder="정답 철자를 적어보세요" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitShortAnswer()">
+          <input type="text" class="quiz-input-text" id="short-input" placeholder="힌트를 포함한 전체 글자 (예: dog)" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitShortAnswer()">
           <button class="submit-pill-btn" onclick="submitShortAnswer()">정답 확인 ✨</button>
         </div>
       </div>
@@ -1711,7 +1725,7 @@
         shortCont.style.display = 'block';
         descCont.style.display = 'none';
 
-        document.getElementById('question-text').innerHTML = `발음과 힌트를 확인하고, 알맞은 영어 단어 철자를 완성해 보세요! 🔤`;
+        document.getElementById('question-text').innerHTML = `발음과 힌트를 확인하고, 알맞은 영어 단어 철자를 완성해 보세요!`;
 
         const wClean = targetItem.word.trim();
         const wLen = wClean.length;
@@ -1722,9 +1736,9 @@
         document.getElementById('short-meaning-text').innerText = targetItem.meaning;
         
         if (lChar) {
-          document.getElementById('letter-count-info').innerHTML = `총 <b>${wLen}</b>글자 (첫 글자 <b>'${fChar}'</b> / 끝 글자 <b>'${lChar}'</b>)`;
+          document.getElementById('letter-count-info').innerHTML = `총 <b>${wLen}</b>글자 (첫 글자 <b>'${fChar}'</b> / 끝 글자 <b>'${lChar}'</b>) · 💡 전체 단어를 적어주세요!`;
         } else {
-          document.getElementById('letter-count-info').innerHTML = `총 <b>${wLen}</b>글자 (첫 글자 <b>'${fChar}'</b>)`;
+          document.getElementById('letter-count-info').innerHTML = `총 <b>${wLen}</b>글자 (첫 글자 <b>'${fChar}'</b>) · 💡 전체 단어를 적어주세요!`;
         }
 
         // 슬롯 블록 생성
@@ -1740,6 +1754,7 @@
 
         const shortInput = document.getElementById('short-input');
         shortInput.value = '';
+        shortInput.placeholder = "힌트를 포함한 전체 글자 (예: dog)";
         shortInput.disabled = false;
         setTimeout(() => shortInput.focus(), 100);
 
