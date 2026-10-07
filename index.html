@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduMate AI 베이비 프렌즈 영어 퀴즈 (통합 믹스 에디션)</title>
+  <!-- 맑고 부드러운 폰트 세팅 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Gowun Dodum', 'Jua', 'Nunito', sans-serif;
+      font-weight: normal;
+      letter-spacing: 0.2px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* 뽀얗고 포근한 파스텔 배경 */
+    body {
+      background: radial-gradient(circle at 20% 20%, #ffe4e6 0%, #ffd1dc 40%, #e0e7ff 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+    
+    /* 각진 느낌이 0%인 몽글몽글 구름 카드 (780px 와이드형) */
+    .app-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 780px;
+      border-radius: 54px;
+      padding: 44px 40px 38px;
+      box-shadow: 0 24px 60px rgba(251, 113, 133, 0.2), 0 4px 20px rgba(224, 231, 255, 0.5);
+      border: 4px solid #fed7aa;
+      text-align: center;
+      position: relative;
+    }
+
+    /* 몽실몽실 메인 아기토끼 마스코트 */
+    .mascot-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: -110px;
+      margin-bottom: 12px;
+    }
+    .mascot-stage {
+      width: 145px;
+      height: 135px;
+      position: relative;
+      user-select: none;
+      animation: babyFloat 3s ease-in-out infinite;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes babyFloat {
+      0%, 100% { transform: translateY(0px) rotate(-1.5deg); }
+      50% { transform: translateY(-10px) rotate(1.5deg); }
+    }
+    .mascot-stage.bounce {
+      animation: none;
+      transform: scale(1.22) rotate(6deg);
+    }
+    .mascot-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 12px 18px rgba(251, 113, 133, 0.3));
+    }
+
+    /* 상단 유틸리티 바 (API 키 상태 및 설정 버튼) */
+    .top-utility-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 0 6px;
+    }
+    .key-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .key-status-pill.saved {
+      background: #ecfdf5;
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+    .key-status-pill.empty {
+      background: #fff7ed;
+      color: #c2410c;
+      border-color: #ffedd5;
+    }
+    .key-status-pill:hover {
+      transform: translateY(-2px);
+    }
+
+    /* ========================================================
+       [화면 1] 둥글둥글 첫 인트로 화면
+       ======================================================== */
+    #intro-screen {
+      display: block;
+    }
+    .intro-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #fef08a, #fde047);
+      color: #854d0e;
+      padding: 7px 24px;
+      border-radius: 50px;
+      font-size: 15px;
+      box-shadow: 0 4px 14px rgba(254, 240, 138, 0.6);
+      margin-bottom: 12px;
+      border: 2px solid #facc15;
+      font-family: 'Jua', sans-serif;
+    }
+    .intro-title {
+      font-size: 32px;
+      color: #be123c;
+      margin-bottom: 6px;
+      line-height: 1.3;
+      font-family: 'Jua', sans-serif;
+    }
+    .intro-sub {
+      font-size: 17px;
+      color: #64748b;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* 학년 선택 알약 탭 */
+    .section-label {
+      font-size: 16px;
+      color: #475569;
+      margin-bottom: 10px;
+      text-align: left;
+      padding-left: 6px;
+      font-weight: bold;
+    }
+    .grade-selector-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .grade-pill-btn {
+      background: #ffffff;
+      border: 3px solid #fed7aa;
+      border-radius: 36px;
+      padding: 16px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: left;
+    }
+    .grade-pill-btn:hover {
+      border-color: #fb923c;
+      transform: translateY(-2px);
+    }
+    .grade-pill-btn.active {
+      background: linear-gradient(145deg, #fff7ed, #ffedd5);
+      border-color: #ea580c;
+      box-shadow: 0 8px 20px rgba(234, 88, 12, 0.2);
+    }
+    .grade-pill-icon {
+      font-size: 28px;
+    }
+    .grade-pill-title {
+      font-size: 20px;
+      color: #1e293b;
+      font-family: 'Jua', sans-serif;
+    }
+    .grade-pill-desc {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* 3대 문제 유형 카드 그리드 */
+    .type-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 26px;
+    }
+    .type-card {
+      background: #ffffff;
+      border: 3px solid #e2e8f0;
+      border-radius: 32px;
+      padding: 20px 14px;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .type-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+    .type-card.active {
+      border-color: #fb7185;
+      background: linear-gradient(180deg, #ffffff 0%, #fff1f2 100%);
+      box-shadow: 0 12px 28px rgba(251, 113, 133, 0.25);
+    }
+    .type-badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 50px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .badge-bank {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    .badge-short {
+      background: #fef08a;
+      color: #854d0e;
+      border: 1px solid #facc15;
+    }
+    .badge-desc {
+      background: #f3e8ff;
+      color: #7e22ce;
+      border: 1px solid #e9d5ff;
+    }
+    .type-icon {
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+    .type-title {
+      font-size: 18px;
+      color: #1e293b;
+      font-family: 'Jua', sans-serif;
+      margin-bottom: 4px;
+    }
+    .type-summary {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+
+    /* 게임 시작 큰 버튼 */
+    .start-game-btn {
+      background: linear-gradient(135deg, #fb7185, #f43f5e);
+      color: white;
+      border: none;
+      box-shadow: 0 10px 24px rgba(244, 63, 94, 0.35);
+      border-radius: 50px;
+      padding: 18px 40px;
+      font-size: 23px;
+      font-family: 'Jua', sans-serif;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .start-game-btn:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 14px 32px rgba(244, 63, 94, 0.45);
+    }
+    .start-game-btn:active {
+      transform: translateY(2px) scale(0.99);
+    }
+
+    /* ========================================================
+       [화면 2] 퀴즈 플레이 화면
+       ======================================================== */
+    #quiz-screen {
+      display: none;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      white-space: nowrap;
+      gap: 8px;
+    }
+    .current-tag {
+      background: #fef08a;
+      border: 2px solid #facc15;
+      color: #854d0e;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .current-tag:hover {
+      background: #fde047;
+      transform: scale(1.03);
+    }
+    .progress-badge {
+      background: #e0e7ff;
+      border: 2px solid #c7d2fe;
+      color: #4338ca;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 15px;
+    }
+    .score-badge {
+      background: #ffedd5;
+      border: 2px solid #fed7aa;
+      color: #c2410c;
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .progress-bar-wrap {
+      background: #f1f5f9;
+      border-radius: 50px;
+      height: 12px;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 18px;
+      border: 2px solid #e2e8f0;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #fb7185, #f43f5e);
+      height: 100%;
+      width: 10%;
+      border-radius: 50px;
+      transition: width 0.3s ease;
+    }
+
+    .category-tag {
+      background: #ede9fe;
+      border: 2px solid #ddd6fe;
+      color: #5b21b6;
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 50px;
+      font-size: 15px;
+      margin-bottom: 14px;
+    }
+
+    .question-box {
+      font-size: 24px;
+      color: #1e293b;
+      margin-bottom: 22px;
+      line-height: 1.5;
+      word-break: keep-all;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: normal;
+    }
+
+    /* 객관식 (4지선다) 보기 그리드 */
+    .options-grid {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .option-btn {
+      background: #ffffff;
+      border: 3px solid #fed7aa;
+      box-shadow: 0 6px 18px rgba(254, 215, 170, 0.3);
+      border-radius: 36px;
+      padding: 16px 22px;
+      font-size: 22px;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .option-btn:hover:not(.disabled) {
+      background: #fff5f5;
+      border-color: #fbcfe8;
+      box-shadow: 0 10px 24px rgba(251, 113, 133, 0.25);
+      transform: translateY(-2px);
+    }
+    .option-text-wrap {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .phonetic-tag {
+      font-size: 15px;
+      color: #94a3b8;
+      font-family: 'Nunito', Arial, sans-serif;
+      font-weight: 700;
+    }
+    .option-btn.correct {
+      background: #dcfce7 !important;
+      border-color: #86efac !important;
+      color: #14532d !important;
+    }
+    .option-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: #fca5a5 !important;
+      color: #7f1d1d !important;
+    }
+    .sound-btn {
+      background: linear-gradient(135deg, #fef08a, #fde047);
+      border: 2px solid #facc15;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.15s;
+    }
+    .sound-btn:hover {
+      transform: scale(1.12);
+    }
+    .sound-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke: #854d0e;
+    }
+
+    /* 주관식 (첫·끝글자 힌트 슬롯 및 입력창) */
+    .short-container {
+      display: none;
+      background: #fdf4ff;
+      border: 3px solid #f5d0fe;
+      border-radius: 36px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(245, 208, 254, 0.35);
+    }
+    .short-clue-card {
+      background: #ffffff;
+      border: 2px solid #f0abfc;
+      border-radius: 26px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+    .short-clue-text {
+      font-size: 21px;
+      color: #86198f;
+      line-height: 1.4;
+      font-weight: bold;
+    }
+    .short-meaning-pill {
+      display: inline-block;
+      background: #fae8ff;
+      color: #a21caf;
+      padding: 5px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .letter-info-line {
+      font-size: 15px;
+      color: #701a75;
+      margin-bottom: 12px;
+    }
+    .letter-slots-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .letter-slot-box {
+      width: 48px;
+      height: 54px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    .letter-slot-box.revealed {
+      background: #fdf2f8;
+      border: 2.5px solid #f472b6;
+      color: #db2777;
+    }
+    .letter-slot-box.hidden {
+      background: #ffffff;
+      border: 2.5px dashed #cbd5e1;
+      color: #94a3b8;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .quiz-input-text {
+      flex: 1;
+      max-width: 380px;
+      padding: 14px 20px;
+      border-radius: 50px;
+      border: 3px solid #f0abfc;
+      font-size: 20px;
+      outline: none;
+      font-family: 'Nunito', sans-serif;
+      text-align: center;
+      font-weight: 700;
+      text-transform: lowercase;
+    }
+    .quiz-input-text:focus {
+      border-color: #d946ef;
+      box-shadow: 0 0 0 4px rgba(217, 70, 239, 0.15);
+    }
+    .submit-pill-btn {
+      background: linear-gradient(135deg, #c026d3, #9333ea);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 28px;
+      font-size: 19px;
+      font-family: 'Jua', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(192, 38, 211, 0.35);
+      transition: all 0.2s;
+    }
+    .submit-pill-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* 서술형 (문장 표현 미션 카드) */
+    .desc-container {
+      display: none;
+      background: #f0fdf4;
+      border: 3px solid #bbf7d0;
+      border-radius: 36px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(187, 247, 208, 0.35);
+    }
+    .desc-mission-card {
+      background: #ffffff;
+      border: 2px solid #86efac;
+      border-radius: 26px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+    .desc-target-pill {
+      display: inline-block;
+      background: #dcfce7;
+      color: #15803d;
+      padding: 7px 20px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .desc-pattern-hint {
+      font-size: 15px;
+      color: #166534;
+      line-height: 1.5;
+    }
+    .desc-textarea {
+      width: 100%;
+      height: 90px;
+      border-radius: 22px;
+      border: 3px solid #86efac;
+      padding: 14px 18px;
+      font-size: 19px;
+      outline: none;
+      font-family: 'Nunito', sans-serif;
+      resize: none;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .desc-textarea:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+    }
+    .desc-submit-btn {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 34px;
+      font-size: 19px;
+      font-family: 'Jua', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(22, 163, 74, 0.35);
+      transition: all 0.2s;
+    }
+    .desc-submit-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* 결과 및 해설 박스 */
+    .result-box {
+      display: none;
+      background: #faf5ff;
+      border: 3px solid #f3e8ff;
+      border-radius: 36px;
+      padding: 24px 26px;
+      margin-bottom: 24px;
+      text-align: left;
+      box-shadow: 0 8px 20px rgba(216, 180, 254, 0.2);
+    }
+    .result-title {
+      font-size: 22px;
+      margin-bottom: 8px;
+      font-family: 'Jua', sans-serif;
+    }
+    .result-desc {
+      color: #581c87;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+    .accent-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 2px dashed #e9d5ff;
+    }
+    .accent-title {
+      font-size: 15px;
+      color: #7e22ce;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .accent-btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .accent-btn {
+      background: white;
+      border: 2px solid #d8b4fe;
+      color: #7e22ce;
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .accent-btn:hover {
+      background: #f3e8ff;
+      transform: translateY(-2px);
+    }
+
+    .next-btn {
+      background: linear-gradient(135deg, #fb7185, #f43f5e);
+      color: white;
+      border: none;
+      box-shadow: 0 10px 24px rgba(244, 63, 94, 0.35);
+      border-radius: 50px;
+      padding: 17px 36px;
+      font-size: 22px;
+      font-family: 'Jua', sans-serif;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    .next-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* 로딩 인디케이터 */
+    .loading-spinner-box {
+      display: none;
+      padding: 24px;
+      font-size: 17px;
+      color: #7c3aed;
+      font-family: 'Jua', sans-serif;
+    }
+
+    /* ========================================================
+       [화면 3] 최종 미션 완료 화면
+       ======================================================== */
+    #finish-screen {
+      display: none;
+    }
+    .finish-badge {
+      display: inline-block;
+      background: #fef08a;
+      color: #854d0e;
+      padding: 7px 24px;
+      border-radius: 50px;
+      font-size: 16px;
+      margin-bottom: 12px;
+      font-family: 'Jua', sans-serif;
+    }
+    .finish-title {
+      font-size: 32px;
+      color: #be123c;
+      margin-bottom: 8px;
+      font-family: 'Jua', sans-serif;
+    }
+    .finish-sub {
+      font-size: 17px;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+    .finish-card {
+      background: #fff7ed;
+      border: 3px solid #fed7aa;
+      border-radius: 36px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .finish-score-big {
+      font-size: 48px;
+      color: #ea580c;
+      font-family: 'Jua', sans-serif;
+      margin-bottom: 6px;
+    }
+    .finish-score-desc {
+      font-size: 17px;
+      color: #9a3412;
+    }
+    .finish-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .finish-retry-btn {
+      background: linear-gradient(135deg, #fb7185, #f43f5e);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 16px;
+      font-size: 20px;
+      font-family: 'Jua', sans-serif;
+      cursor: pointer;
+    }
+    .finish-home-btn {
+      background: white;
+      border: 2.5px solid #cbd5e1;
+      color: #475569;
+      border-radius: 50px;
+      padding: 14px;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    /* ========================================================
+       [모달] API 키 설정 팝업 (localStorage 보관 & 실시간 키 감지)
+       ======================================================== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 40px;
+      padding: 34px 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 3.5px solid #fed7aa;
+      text-align: left;
+      position: relative;
+    }
+    .modal-title {
+      font-size: 24px;
+      color: #be123c;
+      font-family: 'Jua', sans-serif;
+      margin-bottom: 8px;
+    }
+    .modal-desc {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .key-input-box {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 20px;
+      border: 2px solid #cbd5e1;
+      font-size: 15px;
+      outline: none;
+      font-family: monospace;
+      margin-bottom: 10px;
+    }
+    .key-input-box:focus {
+      border-color: #f43f5e;
+    }
+    .key-detector-pill {
+      display: block;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 18px;
+      transition: all 0.2s;
+    }
+    .key-detector-pill.google {
+      background: #ecfdf5;
+      color: #047857;
+      border: 1.5px solid #a7f3d0;
+    }
+    .key-detector-pill.openai {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1.5px solid #fecaca;
+    }
+    .key-detector-pill.notice {
+      background: #f8fafc;
+      color: #64748b;
+      border: 1.5px solid #e2e8f0;
+    }
+    .modal-btns {
+      display: flex;
+      gap: 10px;
+    }
+    .modal-save-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #fb7185, #f43f5e);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 13px;
+      font-size: 17px;
+      font-family: 'Jua', sans-serif;
+      cursor: pointer;
+    }
+    .modal-close-btn {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      color: #475569;
+      border-radius: 50px;
+      padding: 13px 22px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .modal-delete-btn {
+      background: #fee2e2;
+      border: 1.5px solid #fca5a5;
+      color: #b91c1c;
+      border-radius: 50px;
+      padding: 13px 18px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-card">
+    
+    <!-- 몽실몽실 메인 아기토끼 마스코트 -->
+    <div class="mascot-wrap">
+      <div class="mascot-stage" id="main-mascot">
+        <svg class="mascot-svg" viewBox="0 0 100 100" fill="none">
+          <ellipse cx="33" cy="24" rx="9" ry="21" fill="#ffffff" stroke="#fed7aa" stroke-width="2.5"/>
+          <ellipse cx="33" cy="24" rx="5" ry="15" fill="#fecdd3"/>
+          <ellipse cx="67" cy="24" rx="9" ry="21" fill="#ffffff" stroke="#fed7aa" stroke-width="2.5"/>
+          <ellipse cx="67" cy="24" rx="5" ry="15" fill="#fecdd3"/>
+          <ellipse cx="50" cy="62" rx="36" ry="30" fill="#ffffff" stroke="#fed7aa" stroke-width="3"/>
+          <ellipse cx="50" cy="67" rx="14" ry="10" fill="#fff7ed"/>
+          <circle cx="36" cy="56" r="4" fill="#334155" id="mascot-eye-l"/>
+          <circle cx="64" cy="56" r="4" fill="#334155" id="mascot-eye-r"/>
+          <polygon points="50,64 46,60 54,60" fill="#f43f5e"/>
+          <ellipse cx="26" cy="66" rx="6" ry="4" fill="#fda4af" opacity="0.8"/>
+          <ellipse cx="74" cy="66" rx="6" ry="4" fill="#fda4af" opacity="0.8"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 상단 유틸리티: 개인 API 키 관리 바 -->
+    <div class="top-utility-bar">
+      <div class="key-status-pill empty" id="top-key-status" onclick="openKeyModal()">
+        <span>🔑 API 키 설정</span>
+        <span id="key-badge-text">(미등록)</span>
+      </div>
+      <div style="font-size: 13px; color: #94a3b8;">
+        2022 개정 초등영어 표준
+      </div>
+    </div>
+
+    <!-- ========================================================
+         [화면 1] 메인 인트로 (학년 및 3대 유형 선택)
+         ======================================================== -->
+    <div id="intro-screen">
+      <div class="intro-badge">✨ EduMate AI 초등영어 믹스 에디션 ✨</div>
+      <h1 class="intro-title">신나는 베이비 프렌즈 영어 퀴즈!</h1>
+      <p class="intro-sub">객관식은 초고속 문제은행으로, 주관식과 서술형은 AI 맞춤 피드백으로 즐겨요 💕</p>
+
+      <!-- 1. 학년 선택 -->
+      <div class="section-label">1. 학년을 선택해 주세요:</div>
+      <div class="grade-selector-grid">
+        <div class="grade-pill-btn active" id="grade-btn-34" onclick="selectGrade('34')">
+          <div class="grade-pill-icon">🐥</div>
+          <div>
+            <div class="grade-pill-title">3~4학년 새싹반</div>
+            <div class="grade-pill-desc">동물, 과일, 색깔 등 기초 영단어</div>
+          </div>
+        </div>
+        <div class="grade-pill-btn" id="grade-btn-56" onclick="selectGrade('56')">
+          <div class="grade-pill-icon">🦁</div>
+          <div>
+            <div class="grade-pill-title">5~6학년 열매반</div>
+            <div class="grade-pill-desc">장소, 직업, 문맥 심화 영단어</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 퀴즈 유형 선택 -->
+      <div class="section-label">2. 문제 유형을 골라보세요:</div>
+      <div class="type-cards-grid">
+        <!-- 1번: 객관식 (문제은행 방식) -->
+        <div class="type-card active" id="type-card-choice" onclick="selectType('choice')">
+          <div class="type-badge badge-bank">⚡ 1번 문제은행 (키 불필요)</div>
+          <div class="type-icon">🎈</div>
+          <div class="type-title">4지선다 객관식</div>
+          <div class="type-summary">전체 보기 발음기호 제공, 0.001초 즉시 출제 & 할루시네이션 0%</div>
+        </div>
+
+        <!-- 2번: 주관식 (철자 쓰기) -->
+        <div class="type-card" id="type-card-short" onclick="selectType('short')">
+          <div class="type-badge badge-short">🔤 첫·끝글자 힌트</div>
+          <div class="type-icon">✏️</div>
+          <div class="type-title">주관식 철자 쓰기</div>
+          <div class="type-summary">모찌 슬롯 힌트 블록과 발음 단서로 영어 철자 완성</div>
+        </div>
+
+        <!-- 3번: 서술형 (문장 표현 AI) -->
+        <div class="type-card" id="type-card-desc" onclick="selectType('descriptive')">
+          <div class="type-badge badge-desc">🤖 2번 실시간 AI 채점</div>
+          <div class="type-icon">📝</div>
+          <div class="type-title">서술형 문장 표현</div>
+          <div class="type-summary">단어를 넣어 문장 쓰기! Gemini AI가 1~5점 정밀 문맥 채점</div>
+        </div>
+      </div>
+
+      <!-- 시작 버튼 -->
+      <button class="start-game-btn" onclick="startQuizSession()">
+        👉 퀴즈 풀러 출발하기! 🚀
+      </button>
+    </div>
+
+    <!-- ========================================================
+         [화면 2] 퀴즈 플레이 화면
+         ======================================================== */ -->
+    <div id="quiz-screen">
+      <div class="header-bar">
+        <button class="current-tag" onclick="backToIntro()" title="처음으로">
+          <span id="header-grade-type-text">🐥 3~4학년 · 🎈 객관식</span> <span>🔄</span>
+        </button>
+        <div class="progress-badge" id="progress-text">🎯 1 / 10 문제</div>
+        <div class="score-badge" id="score-text">⭐ 0점</div>
+      </div>
+
+      <!-- 프로그레스 바 -->
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+
+      <div class="category-tag" id="category-tag">단원: 어휘 탐구</div>
+      <div class="question-box" id="question-text">문제를 준비하는 중...</div>
+
+      <!-- 1. 객관식 4지선다 영역 (문제은행 방식) -->
+      <div class="options-grid" id="options-container"></div>
+
+      <!-- 2. 주관식 영역 (첫·끝글자 슬롯 스캐폴딩) -->
+      <div class="short-container" id="short-answer-container">
+        <div class="short-clue-card">
+          <div class="short-clue-text" id="short-clue-text">"멍멍 짖는 귀여운 동물"</div>
+          <div class="short-meaning-pill" id="short-meaning-text">개, 강아지</div>
+        </div>
+        <div class="letter-info-line" id="letter-count-info">총 3글자 (첫 글자 'D' / 끝 글자 'G')</div>
+        <div class="letter-slots-wrap" id="letter-slots-container"></div>
+        <div class="input-row">
+          <input type="text" class="quiz-input-text" id="short-input" placeholder="정답 철자를 적어보세요" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter') submitShortAnswer()">
+          <button class="submit-pill-btn" onclick="submitShortAnswer()">정답 확인 ✨</button>
+        </div>
+      </div>
+
+      <!-- 3. 서술형 영역 (문장 표현 미션 & AI 문맥 채점) -->
+      <div class="desc-container" id="desc-answer-container">
+        <div class="desc-mission-card">
+          <div class="desc-target-pill" id="desc-target-word">미션 단어: dog</div>
+          <div class="desc-pattern-hint" id="desc-pattern-hint">💡 추천 패턴: "I like dog." 또는 "This is a dog."</div>
+        </div>
+        <textarea class="desc-textarea" id="desc-input" placeholder="위 단어를 넣어서 나만의 영어 문장을 자유롭게 써보세요!"></textarea>
+        <button class="desc-submit-btn" id="desc-submit-btn" onclick="submitDescriptiveAnswer()">🤖 AI 선생님께 채점받기 ✨</button>
+      </div>
+
+      <!-- AI 채점 로딩 안내 -->
+      <div class="loading-spinner-box" id="loading-spinner-box">
+        ⏳ AI 선생님이 문맥과 표현을 정밀하게 읽어보는 중이에요... 💕
+      </div>
+
+      <!-- 해설 및 3개국 발음 비교 박스 -->
+      <div class="result-box" id="result-box">
+        <p class="result-title" id="result-title"></p>
+        <p class="result-desc" id="result-desc"></p>
+        
+        <div class="accent-section">
+          <span class="accent-title">🎧 3개국 원어민 발음 비교해보기:</span>
+          <div class="accent-btns">
+            <button class="accent-btn" onclick="speakAccent('en-US')">🇺🇸 미국식</button>
+            <button class="accent-btn" onclick="speakAccent('en-GB')">🇬🇧 영국식</button>
+            <button class="accent-btn" onclick="speakAccent('en-AU')">🇦🇺 호주식</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="next-btn" id="next-btn" onclick="handleNextClick()">👉 다음 문제 풀기 🎈</button>
+    </div>
+
+    <!-- ========================================================
+         [화면 3] 최종 미션 완료 화면
+         ======================================================== -->
+    <div id="finish-screen">
+      <div class="finish-badge">🎊 10문제 완주 성공! 🎊</div>
+      <h2 class="finish-title">정말 대단해요! 최고예요!</h2>
+      <p class="finish-sub">오늘의 영어 퀴즈 10문제를 멋지게 끝마쳤어요 💕</p>
+      
+      <div class="finish-card">
+        <div class="finish-score-big" id="finish-score-display">100점</div>
+        <div class="finish-score-desc" id="finish-detail-display">총 10문제 중 10개 정답</div>
+      </div>
+      
+      <div class="finish-btns">
+        <button class="finish-retry-btn" onclick="startQuizSession()">🔄 새로운 10문제 도전하기 🎈</button>
+        <button class="finish-home-btn" onclick="backToIntro()">🏠 첫 화면(유형 선택)으로 돌아가기</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================
+       [모달] API 키 설정 모달 (localStorage 방식 & 구글/오픈AI 감지)
+       ======================================================== -->
+  <div class="modal-overlay" id="key-modal-overlay">
+    <div class="modal-card">
+      <h3 class="modal-title">🔑 개인 Gemini API 키 설정</h3>
+      <p class="modal-desc">
+        서술형 AI 채점 및 고급 AI 기능에 사용됩니다.<br>
+        키는 서버로 전송되지 않고 <b>내 브라우저(localStorage)에만 안전하게 보관</b>됩니다. (단톡방 공유 시에도 본인 키 노출 위험 0%)
+      </p>
+
+      <input type="password" class="key-input-box" id="modal-key-input" placeholder="AIzaSy... 형태의 Google Gemini 키를 붙여넣으세요" oninput="handleKeyInputChange()">
+
+      <!-- 실시간 키 종류 감지기 -->
+      <div class="key-detector-pill notice" id="key-detector-status">
+        💡 키를 입력하시면 Google 키인지 OpenAI 키인지 자동으로 식별합니다.
+      </div>
+
+      <div class="modal-btns">
+        <button class="modal-save-btn" onclick="saveApiKey()">💾 안전하게 저장</button>
+        <button class="modal-delete-btn" onclick="deleteApiKey()">🗑️ 삭제</button>
+        <button class="modal-close-btn" onclick="closeKeyModal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ========================================================
+       2022 개정 초등영어 표준 어휘 & 정밀 IPA 발음기호 DB
+       (1번 문제은행 방식: 할루시네이션 0%, 중복 0%, 초고속 출제)
+       ======================================================== */
+    const DB_GRADE_34 = [
+      { word: "dog", ipa: "/dɔːɡ/", meaning: "개, 강아지", category: "동물", hint: "멍멍 짖는 귀여운 동물" },
+      { word: "cat", ipa: "/kæt/", meaning: "고양이", category: "동물", hint: "야옹 소리를 내는 동물" },
+      { word: "rabbit", ipa: "/ˈræb.ɪt/", meaning: "토끼", category: "동물", hint: "귀가 길고 깡충깡충 뛰는 동물" },
+      { word: "bear", ipa: "/ber/", meaning: "곰", category: "동물", hint: "겨울잠을 자고 꿀을 좋아하는 동물" },
+      { word: "bird", ipa: "/bɜːrd/", meaning: "새", category: "동물", hint: "날개가 있어 하늘을 나는 동물" },
+      { word: "duck", ipa: "/dʌk/", meaning: "오리", category: "동물", hint: "꽥꽥 소리를 내며 헤엄치는 새" },
+      { word: "pig", ipa: "/pɪɡ/", meaning: "돼지", category: "동물", hint: "꿀꿀 소리를 내는 분홍빛 동물" },
+      { word: "lion", ipa: "/ˈlaɪ.ən/", meaning: "사자", category: "동물", hint: "멋진 갈기를 가진 동물의 왕" },
+      { word: "tiger", ipa: "/ˈtaɪ.ɡɚ/", meaning: "호랑이", category: "동물", hint: "용맹한 줄무늬를 가진 동물" },
+      { word: "monkey", ipa: "/ˈmʌŋ.ki/", meaning: "원숭이", category: "동물", hint: "나무를 잘 타고 바나나를 좋아하는 동물" },
+      { word: "elephant", ipa: "/ˈel.ə.fənt/", meaning: "코끼리", category: "동물", hint: "코가 길고 몸집이 아주 커다란 동물" },
+      { word: "frog", ipa: "/frɑːɡ/", meaning: "개구리", category: "동물", hint: "개골개골 울며 연못에 사는 동물" },
+      { word: "horse", ipa: "/hɔːrs/", meaning: "말", category: "동물", hint: "다그닥다그닥 빠르게 달리는 동물" },
+      { word: "cow", ipa: "/kaʊ/", meaning: "소", category: "동물", hint: "음매 소리를 내며 풀을 먹는 동물" },
+      { word: "sheep", ipa: "/ʃiːp/", meaning: "양", category: "동물", hint: "복슬복슬 하얀 털을 가진 온순한 동물" },
+      { word: "fish", ipa: "/fɪʃ/", meaning: "물고기", category: "동물", hint: "물속에서 헤엄치며 아가미로 숨쉬는 동물" },
+
+      { word: "red", ipa: "/red/", meaning: "빨간색", category: "색깔", hint: "잘 익은 사과와 딸기의 색깔" },
+      { word: "blue", ipa: "/bluː/", meaning: "파란색", category: "색깔", hint: "맑은 가을 하늘과 깊은 바다의 색" },
+      { word: "yellow", ipa: "/ˈjel.oʊ/", meaning: "노란색", category: "색깔", hint: "달콤한 바나나와 개나리의 색" },
+      { word: "green", ipa: "/ɡriːn/", meaning: "초록색", category: "색깔", hint: "싱그러운 나뭇잎과 잔디의 색" },
+      { word: "pink", ipa: "/pɪŋk/", meaning: "분홍색", category: "색깔", hint: "화사한 벚꽃과 솜사탕의 색" },
+      { word: "black", ipa: "/blæk/", meaning: "검은색", category: "색깔", hint: "깜깜한 밤하늘의 색" },
+      { word: "white", ipa: "/waɪt/", meaning: "하얀색", category: "색깔", hint: "소복소복 내린 깨끗한 눈의 색" },
+      { word: "orange", ipa: "/ˈɔːr.ɪndʒ/", meaning: "주황색", category: "색깔", hint: "상큼한 귤과 당근의 색" },
+      { word: "purple", ipa: "/ˈpɜːr.pəl/", meaning: "보라색", category: "색깔", hint: "달콤한 포도와 제비꽃의 색" },
+      { word: "brown", ipa: "/braʊn/", meaning: "갈색", category: "색깔", hint: "달콤한 초콜릿과 나무 기둥의 색" },
+
+      { word: "apple", ipa: "/ˈæp.əl/", meaning: "사과", category: "음식 & 과일", hint: "빨갛고 아삭아삭 맛있는 과일" },
+      { word: "banana", ipa: "/bəˈnæn.ə/", meaning: "바나나", category: "음식 & 과일", hint: "껍질을 까먹는 길쭉한 노란 과일" },
+      { word: "milk", ipa: "/mɪlk/", meaning: "우유", category: "음식 & 과일", hint: "매일 아침 마시는 고소한 하얀 음료" },
+      { word: "bread", ipa: "/bred/", meaning: "빵", category: "음식 & 과일", hint: "밀가루를 오븐에 구워 만든 음식" },
+      { word: "water", ipa: "/ˈwɔː.tər/", meaning: "물", category: "음식 & 과일", hint: "목마를 때 마시는 시원하고 투명한 음료" },
+      { word: "egg", ipa: "/eɡ/", meaning: "달걀", category: "음식 & 과일", hint: "둥글고 영양이 풍부한 닭의 알" },
+      { word: "cheese", ipa: "/tʃiːz/", meaning: "치즈", category: "음식 & 과일", hint: "피자에 얹어 먹는 짭짤하고 고소한 유제품" },
+      { word: "juice", ipa: "/dʒuːs/", meaning: "주스", category: "음식 & 과일", hint: "과일을 짜서 만든 달콤한 음료" },
+      { word: "cookie", ipa: "/ˈkʊk.i/", meaning: "쿠키, 과자", category: "음식 & 과일", hint: "바삭바삭 구운 달콤한 간식" },
+      { word: "pizza", ipa: "/ˈpiːt.sə/", meaning: "피자", category: "음식 & 과일", hint: "치즈와 토핑을 얹어 구운 둥근 이탈리아 요리" },
+
+      { word: "book", ipa: "/bʊk/", meaning: "책", category: "학교 & 학용품", hint: "이야기와 그림이 담긴 읽을거리" },
+      { word: "pencil", ipa: "/ˈpen.səl/", meaning: "연필", category: "학교 & 학용품", hint: "공책에 사각사각 글씨를 쓰는 필기도구" },
+      { word: "desk", ipa: "/desk/", meaning: "책상", category: "학교 & 학용품", hint: "공부할 때 책을 펴놓는 가구" },
+      { word: "chair", ipa: "/tʃer/", meaning: "의자", category: "학교 & 학용품", hint: "다리가 4개 있고 편하게 앉는 가구" },
+      { word: "bag", ipa: "/bæɡ/", meaning: "가방", category: "학교 & 학용품", hint: "교과서와 필통을 넣어 메는 가방" },
+      { word: "ruler", ipa: "/ˈruː.lɚ/", meaning: "자", category: "학교 & 학용품", hint: "길이를 재거나 반듯하게 줄을 긋는 도구" },
+      { word: "eraser", ipa: "/ɪˈreɪ.sɚ/", meaning: "지우개", category: "학교 & 학용품", hint: "틀린 연필 글씨를 쓱쓱 지우는 도구" },
+      { word: "clock", ipa: "/klɑːk/", meaning: "시계", category: "학교 & 집", hint: "지금이 몇 시 몇 분인지 알려주는 물건" },
+      { word: "door", ipa: "/dɔːr/", meaning: "문", category: "학교 & 집", hint: "열고 닫으며 방으로 들어가는 입구" },
+      { word: "window", ipa: "/ˈwɪn.doʊ/", meaning: "창문", category: "학교 & 집", hint: "햇빛과 시원한 바람이 들어오는 유리문" },
+
+      { word: "mom", ipa: "/mɑːm/", meaning: "엄마", category: "가족", hint: "나를 사랑으로 안아주시는 어머니" },
+      { word: "dad", ipa: "/dæd/", meaning: "아빠", category: "가족", hint: "나를 든든하게 지켜주시는 아버지" },
+      { word: "sun", ipa: "/sʌn/", meaning: "해, 태양", category: "자연 & 날씨", hint: "낮 하늘에 환하게 떠서 온 세상을 비추는 빛" },
+      { word: "star", ipa: "/stɑːr/", meaning: "별", category: "자연 & 날씨", hint: "깜깜한 밤하늘에 반짝반짝 빛나는 보석 같은 빛" }
+    ];
+
+    const DB_GRADE_56 = [
+      { word: "library", ipa: "/ˈlaɪ.brer.i/", meaning: "도서관", category: "공공장소", hint: "조용히 책을 읽고 빌리는 지혜의 공간" },
+      { word: "hospital", ipa: "/ˈhɑː.spɪ.t̬əl/", meaning: "병원", category: "공공장소", hint: "의사 선생님이 아픈 환자를 치료하는 곳" },
+      { word: "museum", ipa: "/mjuːˈziː.əm/", meaning: "박물관", category: "공공장소", hint: "역사 유물이나 예술품을 관람하는 장소" },
+      { word: "station", ipa: "/ˈsteɪ.ʃən/", meaning: "기차역, 역", category: "공공장소", hint: "기차나 지하철을 타기 위해 모이는 곳" },
+      { word: "airport", ipa: "/ˈer.pɔːrt/", meaning: "공항", category: "공공장소", hint: "비행기가 힘차게 이착륙하는 여행의 관문" },
+      { word: "market", ipa: "/ˈmɑːr.kɪt/", meaning: "시장", category: "공공장소", hint: "과일, 채소 등 신선한 물건을 사고파는 활기찬 곳" },
+      { word: "restaurant", ipa: "/ˈres.tə.rɑːnt/", meaning: "식당", category: "공공장소", hint: "맛있는 음식을 주문해서 먹는 곳" },
+      { word: "bank", ipa: "/bæŋk/", meaning: "은행", category: "공공장소", hint: "용돈을 저축하고 금융 업무를 보는 곳" },
+      { word: "park", ipa: "/pɑːrk/", meaning: "공원", category: "공공장소", hint: "푸른 나무 그늘 아래서 산책하고 뛰노는 휴식처" },
+      { word: "cinema", ipa: "/ˈsɪn.ə.mə/", meaning: "영화관", category: "공공장소", hint: "팝콘을 먹으며 큰 스크린으로 영화를 보는 곳" },
+
+      { word: "doctor", ipa: "/ˈdɑːk.tɚ/", meaning: "의사", category: "직업", hint: "청진기로 진찰하고 아픈 곳을 고쳐주는 분" },
+      { word: "teacher", ipa: "/ˈtiː.tʃɚ/", meaning: "선생님", category: "직업", hint: "학교에서 새로운 지식과 바른 마음을 가르쳐주시는 분" },
+      { word: "pilot", ipa: "/ˈpaɪ.lət/", meaning: "비행기 조종사", category: "직업", hint: "하늘 높이 멋진 비행기를 조종하는 전문가" },
+      { word: "cook", ipa: "/kʊk/", meaning: "요리사", category: "직업", hint: "정성을 다해 맛있는 음식을 만드는 요리의 달인" },
+      { word: "scientist", ipa: "/ˈsaɪ.ən.tɪst/", meaning: "과학자", category: "직업", hint: "새로운 원리를 발견하고 신비한 실험을 하는 분" },
+      { word: "artist", ipa: "/ˈɑːr.tɪst/", meaning: "예술가, 화가", category: "직업", hint: "도화지에 아름다운 그림을 그리고 작품을 창작하는 분" },
+      { word: "singer", ipa: "/ˈsɪŋ.ɚ/", meaning: "가수", category: "직업", hint: "무대 위에서 아름다운 목소리로 노래하는 분" },
+      { word: "police", ipa: "/pəˈliːs/", meaning: "경찰관", category: "직업", hint: "시민의 안전을 지키고 질서를 유지하는 든든한 분" },
+      { word: "firefighter", ipa: "/ˈfaɪrˌfaɪ.t̬ɚ/", meaning: "소방관", category: "직업", hint: "화재를 진압하고 위험에 빠진 사람을 구하는 영웅" },
+      { word: "farmer", ipa: "/ˈfɑːr.mɚ/", meaning: "농부", category: "직업", hint: "땅을 일구어 벼와 곡식, 채소를 정성스레 기르는 분" },
+
+      { word: "weather", ipa: "/ˈweð.ɚ/", meaning: "날씨", category: "자연 & 환경", hint: "비, 눈, 맑음 등 매일매일 변화하는 하늘의 상태" },
+      { word: "season", ipa: "/ˈsiː.zən/", meaning: "계절", category: "자연 & 환경", hint: "봄, 여름, 가을, 겨울의 아름다운 순환" },
+      { word: "planet", ipa: "/ˈplæn.ɪt/", meaning: "행성", category: "자연 & 우주", hint: "태양 주위를 공전하는 지구, 화성 같은 천체" },
+      { word: "forest", ipa: "/ˈfɔːr.ɪst/", meaning: "숲", category: "자연 & 환경", hint: "많은 나무들이 울창하게 모여 있어 공기가 맑은 곳" },
+      { word: "ocean", ipa: "/ˈoʊ.ʃən/", meaning: "대양, 바다", category: "자연 & 환경", hint: "지구의 대부분을 덮고 있는 넓고 푸른 깊은 바다" },
+
+      { word: "bridge", ipa: "/brɪdʒ/", meaning: "다리", category: "교통 & 도시", hint: "강이나 바다를 건널 수 있도록 건설된 구조물" },
+      { word: "traffic", ipa: "/ˈtræf.ɪk/", meaning: "교통", category: "교통 & 도시", hint: "도로 위를 오가는 많은 자동차와 버스의 흐름" },
+      { word: "subway", ipa: "/ˈsʌb.weɪ/", meaning: "지하철", category: "교통 & 도시", hint: "땅속 터널을 빠르게 달리는 편리한 전철" },
+      { word: "bicycle", ipa: "/ˈbaɪ.sə.kəl/", meaning: "자전거", category: "교통 & 도시", hint: "두 페달을 밟아 바퀴를 굴리며 타는 탈것" },
+      { word: "journey", ipa: "/ˈdʒɜːr.ni/", meaning: "여행, 여정", category: "활동 & 여가", hint: "새로운 곳을 향해 떠나는 설레는 발걸음" }
+    ];
+
+    /* ========================================================
+       전역 상태 변수 관리
+       ======================================================== */
+    let currentGrade = '34';
+    let currentQuizType = 'choice';
+    let sessionQuestions = [];
+    let currentQuestionIndex = 0;
+    let totalSessionQuestions = 10;
+    let score = 0;
+    let correctCount = 0;
+    let isAnswered = false;
+    let currentQuiz = null;
+
+    // Web Audio API
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    // 초기 로딩 시 localStorage에서 API 키 로드
+    window.addEventListener('DOMContentLoaded', () => {
+      updateKeyStatusUI();
+    });
+
+    /* ========================================================
+       API 키 관리 & 실시간 식별 로직 (보안 2번 방식)
+       ======================================================== */
+    function openKeyModal() {
+      const savedKey = localStorage.getItem("GEMINI_API_KEY") || "";
+      document.getElementById('modal-key-input').value = savedKey;
+      handleKeyInputChange();
+      document.getElementById('key-modal-overlay').style.display = 'flex';
+    }
+
+    function closeKeyModal() {
+      document.getElementById('key-modal-overlay').style.display = 'none';
+    }
+
+    function handleKeyInputChange() {
+      const input = document.getElementById('modal-key-input').value.trim();
+      const statusEl = document.getElementById('key-detector-status');
+
+      if (!input) {
+        statusEl.className = 'key-detector-pill notice';
+        statusEl.innerHTML = '💡 키를 입력하시면 Google 키인지 OpenAI 키인지 자동으로 식별합니다.';
+        return;
+      }
+
+      if (input.startsWith('AIzaSy') || input.startsWith('AIza')) {
+        statusEl.className = 'key-detector-pill google';
+        statusEl.innerHTML = '✨ <b>Google Gemini API 키</b>가 확인되었습니다! (본 퀴즈에 완벽 호환)';
+      } else if (input.startsWith('sk-') || input.startsWith('sk-proj-')) {
+        statusEl.className = 'key-detector-pill openai';
+        statusEl.innerHTML = '⚠️ <b>OpenAI 키(sk-...)</b>가 감지되었습니다. 본 퀴즈는 Google Gemini 기반이므로 Google AI Studio(aistudio.google.com) 키를 사용해 주세요!';
+      } else if (input.length >= 30) {
+        statusEl.className = 'key-detector-pill google';
+        statusEl.innerHTML = '💡 키 형식이 입력되었습니다. (Google Gemini API 키인지 확인해 주세요)';
+      } else {
+        statusEl.className = 'key-detector-pill notice';
+        statusEl.innerHTML = '🔎 키를 끝까지 입력해 주세요... (Google 키는 보통 "AIza"로 시작합니다)';
+      }
+    }
+
+    function saveApiKey() {
+      const input = document.getElementById('modal-key-input').value.trim();
+      if (!input) {
+        alert("키를 입력해 주세요!");
+        return;
+      }
+      if (input.startsWith('sk-')) {
+        if (!confirm("OpenAI 키가 감지되었습니다. Google Gemini 키가 아니면 AI 채점이 동작하지 않을 수 있습니다. 그래도 저장할까요?")) {
+          return;
+        }
+      }
+      localStorage.setItem("GEMINI_API_KEY", input);
+      updateKeyStatusUI();
+      closeKeyModal();
+      alert("✅ API 키가 브라우저에 안전하게 저장되었습니다!\n(깃허브나 외부에는 절대 유출되지 않습니다)");
+    }
+
+    function deleteApiKey() {
+      if (confirm("저장된 API 키를 삭제하시겠습니까?")) {
+        localStorage.removeItem("GEMINI_API_KEY");
+        document.getElementById('modal-key-input').value = "";
+        handleKeyInputChange();
+        updateKeyStatusUI();
+        alert("🗑️ API 키가 브라우저에서 삭제되었습니다.");
+      }
+    }
+
+    function updateKeyStatusUI() {
+      const key = localStorage.getItem("GEMINI_API_KEY");
+      const statusPill = document.getElementById('top-key-status');
+      const badgeText = document.getElementById('key-badge-text');
+
+      if (key && key.trim()) {
+        statusPill.className = 'key-status-pill saved';
+        badgeText.innerText = '✅ 키 등록됨';
+      } else {
+        statusPill.className = 'key-status-pill empty';
+        badgeText.innerText = '(서술형 AI키 미등록)';
+      }
+    }
+
+    /* ========================================================
+       인트로 화면 선택 로직
+       ======================================================== */
+    function selectGrade(grade) {
+      currentGrade = grade;
+      document.getElementById('grade-btn-34').classList.toggle('active', grade === '34');
+      document.getElementById('grade-btn-56').classList.toggle('active', grade === '56');
+    }
+
+    function selectType(type) {
+      currentQuizType = type;
+      document.getElementById('type-card-choice').classList.toggle('active', type === 'choice');
+      document.getElementById('type-card-short').classList.toggle('active', type === 'short');
+      document.getElementById('type-card-desc').classList.toggle('active', type === 'descriptive');
+    }
+
+    function startQuizSession() {
+      initAudio();
+      
+      // 서술형 선택 시 API 키가 없으면 친절히 등록 모달로 유도
+      if (currentQuizType === 'descriptive') {
+        const savedKey = localStorage.getItem("GEMINI_API_KEY");
+        if (!savedKey) {
+          if (confirm("📝 서술형 문장 쓰기는 Gemini AI가 1~5점 정밀 채점을 진행합니다.\n지금 본인의 Google Gemini API 키를 등록하시겠습니까?")) {
+            openKeyModal();
+            return;
+          }
+        }
+      }
+
+      // 10문제 고유 단어 무작위 셔플 (중복 0% 보장)
+      const fullDb = (currentGrade === '34') ? DB_GRADE_34 : DB_GRADE_56;
+      sessionQuestions = shuffleArray([...fullDb]).slice(0, totalSessionQuestions);
+      currentQuestionIndex = 0;
+      score = 0;
+      correctCount = 0;
+
+      document.getElementById('intro-screen').style.display = 'none';
+      document.getElementById('finish-screen').style.display = 'none';
+      document.getElementById('quiz-screen').style.display = 'block';
+
+      const gradeName = (currentGrade === '34') ? '🐥 3~4학년' : '🦁 5~6학년';
+      const typeNames = { choice: '🎈 객관식', short: '✏️ 주관식', descriptive: '📝 서술형' };
+      document.getElementById('header-grade-type-text').innerText = `${gradeName} · ${typeNames[currentQuizType]}`;
+      document.getElementById('score-text').innerText = `⭐ 0점`;
+
+      renderCurrentQuestion();
+    }
+
+    function backToIntro() {
+      document.getElementById('quiz-screen').style.display = 'none';
+      document.getElementById('finish-screen').style.display = 'none';
+      document.getElementById('intro-screen').style.display = 'block';
+      setMascotEmotion('normal');
+    }
+
+    /* ========================================================
+       문제 렌더링 로직 (1번 객관식 vs 2번 주관식/서술형)
+       ======================================================== */
+    function renderCurrentQuestion() {
+      isAnswered = false;
+      setMascotEmotion('normal');
+
+      const targetItem = sessionQuestions[currentQuestionIndex];
+      const questionNum = currentQuestionIndex + 1;
+
+      // 헤더 및 프로그레스 갱신
+      document.getElementById('progress-text').innerText = `🎯 ${questionNum} / ${totalSessionQuestions} 문제`;
+      document.getElementById('progress-bar-fill').style.width = `${(questionNum / totalSessionQuestions) * 100}%`;
+      document.getElementById('category-tag').innerText = `🌱 [${targetItem.category}] 단원`;
+      document.getElementById('result-box').style.display = 'none';
+      document.getElementById('loading-spinner-box').style.display = 'none';
+
+      // 다음 버튼 안내 문구
+      const nextBtn = document.getElementById('next-btn');
+      if (currentQuestionIndex === totalSessionQuestions - 1) {
+        nextBtn.innerText = '👉 최종 결과 확인하기! 🏆';
+      } else {
+        nextBtn.innerText = `👉 다음 문제 풀기 (${questionNum + 1}/${totalSessionQuestions}) 🎈`;
+      }
+
+      // 영역 전환
+      const optsCont = document.getElementById('options-container');
+      const shortCont = document.getElementById('short-answer-container');
+      const descCont = document.getElementById('desc-answer-container');
+
+      // ----------------------------------------------------
+      // [1번] 4지선다 객관식 (문제은행 방식 - 0.001초 출제)
+      // ----------------------------------------------------
+      if (currentQuizType === 'choice') {
+        optsCont.style.display = 'grid';
+        shortCont.style.display = 'none';
+        descCont.style.display = 'none';
+
+        const fullDb = (currentGrade === '34') ? DB_GRADE_34 : DB_GRADE_56;
+        const wrongPool = fullDb.filter(item => item.word !== targetItem.word);
+        const shuffledWrong = shuffleArray(wrongPool).slice(0, 3);
+        const candidates = shuffleArray([targetItem, ...shuffledWrong]);
+        const correctIdx = candidates.findIndex(item => item.word === targetItem.word);
+
+        if (currentGrade === '34') {
+          document.getElementById('question-text').innerHTML = `'${targetItem.meaning}'을(를) 뜻하는 영어 단어는 무엇일까요? ✨`;
+        } else {
+          document.getElementById('question-text').innerHTML = `[힌트: ${targetItem.hint}]<br>'${targetItem.meaning}'에 딱 맞는 단어는? 💡`;
+        }
+
+        currentQuiz = {
+          word: targetItem.word,
+          ipa: targetItem.ipa,
+          meaning: targetItem.meaning,
+          options: candidates,
+          answerIndex: correctIdx,
+          explanation: `${targetItem.word}는(은) '${targetItem.meaning}'을(를) 뜻하는 단어예요!`
+        };
+
+        optsCont.innerHTML = '';
+        candidates.forEach((opt, idx) => {
+          const btn = document.createElement('div');
+          btn.className = 'option-btn';
+          btn.innerHTML = `
+            <div class="option-text-wrap">
+              <span>${idx + 1}. ${opt.word}</span>
+              <span class="phonetic-tag">${opt.ipa}</span>
+            </div>
+            <button class="sound-btn" title="미국식 발음 듣기" onclick="event.stopPropagation(); speakAccent('en-US', '${opt.word}')">
+              ${getSpeakerSvg()}
+            </button>
+          `;
+          btn.onclick = () => checkChoiceAnswer(idx, btn);
+          optsCont.appendChild(btn);
+        });
+
+      // ----------------------------------------------------
+      // [2번] 주관식 철자 쓰기 (첫·끝글자 힌트 슬롯 블록)
+      // ----------------------------------------------------
+      } else if (currentQuizType === 'short') {
+        optsCont.style.display = 'none';
+        shortCont.style.display = 'block';
+        descCont.style.display = 'none';
+
+        document.getElementById('question-text').innerHTML = `발음과 힌트를 확인하고, 알맞은 영어 단어 철자를 완성해 보세요! 🔤`;
+
+        const wClean = targetItem.word.trim();
+        const wLen = wClean.length;
+        const fChar = wClean[0].toUpperCase();
+        const lChar = (wLen >= 3) ? wClean[wLen - 1].toUpperCase() : '';
+
+        document.getElementById('short-clue-text').innerText = `"${targetItem.hint}"`;
+        document.getElementById('short-meaning-text').innerText = targetItem.meaning;
+        
+        if (lChar) {
+          document.getElementById('letter-count-info').innerHTML = `총 <b>${wLen}</b>글자 (첫 글자 <b>'${fChar}'</b> / 끝 글자 <b>'${lChar}'</b>)`;
+        } else {
+          document.getElementById('letter-count-info').innerHTML = `총 <b>${wLen}</b>글자 (첫 글자 <b>'${fChar}'</b>)`;
+        }
+
+        // 슬롯 블록 생성
+        const slotsCont = document.getElementById('letter-slots-container');
+        slotsCont.innerHTML = '';
+        Array.from(wClean).forEach((ch, idx) => {
+          const isRevealed = (idx === 0) || (wLen >= 3 && idx === wLen - 1);
+          const slot = document.createElement('div');
+          slot.className = `letter-slot-box ${isRevealed ? 'revealed' : 'hidden'}`;
+          slot.innerText = isRevealed ? ch.toUpperCase() : '_';
+          slotsCont.appendChild(slot);
+        });
+
+        const shortInput = document.getElementById('short-input');
+        shortInput.value = '';
+        shortInput.disabled = false;
+        setTimeout(() => shortInput.focus(), 100);
+
+        currentQuiz = {
+          word: targetItem.word,
+          ipa: targetItem.ipa,
+          meaning: targetItem.meaning,
+          explanation: `정답은 '${targetItem.word}' (${targetItem.ipa})입니다! 뜻은 '${targetItem.meaning}'이에요.`
+        };
+
+      // ----------------------------------------------------
+      // [3번] 서술형 문장 표현 (Gemini AI 문맥 정밀 채점)
+      // ----------------------------------------------------
+      } else if (currentQuizType === 'descriptive') {
+        optsCont.style.display = 'none';
+        shortCont.style.display = 'none';
+        descCont.style.display = 'block';
+
+        document.getElementById('question-text').innerHTML = `오늘 배운 단어를 쏙 넣어서, 나만의 멋진 영어 문장을 만들어 보세요! 🌟`;
+        document.getElementById('desc-target-word').innerText = `🎯 미션 단어: ${targetItem.word} (${targetItem.meaning})`;
+        document.getElementById('desc-pattern-hint').innerText = `💡 추천 패턴: "I like ${targetItem.word}." 또는 "This is a ${targetItem.word}."`;
+
+        const descInput = document.getElementById('desc-input');
+        descInput.value = '';
+        descInput.disabled = false;
+        document.getElementById('desc-submit-btn').disabled = false;
+        setTimeout(() => descInput.focus(), 100);
+
+        currentQuiz = {
+          word: targetItem.word,
+          ipa: targetItem.ipa,
+          meaning: targetItem.meaning
+        };
+      }
+    }
+
+    /* ========================================================
+       답안 판정 및 채점 로직
+       ======================================================== */
+    // 1. 객관식 채점
+    function checkChoiceAnswer(userIndex, clickedBtn) {
+      if (isAnswered) return;
+      isAnswered = true;
+
+      const allBtns = document.querySelectorAll('.option-btn');
+      allBtns.forEach(b => b.classList.add('disabled'));
+
+      const isCorrect = (userIndex === currentQuiz.answerIndex);
+      playSound(isCorrect);
+
+      const resBox = document.getElementById('result-box');
+      const resTitle = document.getElementById('result-title');
+      const resDesc = document.getElementById('result-desc');
+      resBox.style.display = 'block';
+
+      if (isCorrect) {
+        setMascotEmotion('happy');
+        clickedBtn.classList.add('correct');
+        score += 10;
+        correctCount += 1;
+        document.getElementById('score-text').innerText = `⭐ ${score}점`;
+        resTitle.innerText = '🎉 딩동댕! 정답이에요!';
+        resTitle.style.color = '#15803d';
+      } else {
+        setMascotEmotion('sad');
+        clickedBtn.classList.add('wrong');
+        allBtns[currentQuiz.answerIndex].classList.add('correct');
+        resTitle.innerText = '💡 아쉬워요! 정답을 확인해 보세요';
+        resTitle.style.color = '#b91c1c';
+      }
+
+      resDesc.innerHTML = `${currentQuiz.explanation}<br><b>발음:</b> ${currentQuiz.ipa}`;
+      setTimeout(() => speakAccent('en-US'), 300);
+    }
+
+    // 2. 주관식 채점
+    function submitShortAnswer() {
+      if (isAnswered) return;
+      const inputEl = document.getElementById('short-input');
+      const userText = inputEl.value.trim().toLowerCase();
+      if (!userText) {
+        alert("철자를 입력해 주세요!");
+        inputEl.focus();
+        return;
+      }
+
+      isAnswered = true;
+      inputEl.disabled = true;
+
+      const isCorrect = (userText === currentQuiz.word.toLowerCase());
+      playSound(isCorrect);
+
+      const resBox = document.getElementById('result-box');
+      const resTitle = document.getElementById('result-title');
+      const resDesc = document.getElementById('result-desc');
+      resBox.style.display = 'block';
+
+      if (isCorrect) {
+        setMascotEmotion('happy');
+        score += 10;
+        correctCount += 1;
+        document.getElementById('score-text').innerText = `⭐ ${score}점`;
+        resTitle.innerText = '🎉 완벽해요! 철자를 정확히 맞췄어요!';
+        resTitle.style.color = '#15803d';
+      } else {
+        setMascotEmotion('sad');
+        resTitle.innerText = `💡 아쉬워요! 바른 철자는 '${currentQuiz.word}'예요`;
+        resTitle.style.color = '#b91c1c';
+      }
+
+      resDesc.innerHTML = `${currentQuiz.explanation}`;
+      setTimeout(() => speakAccent('en-US'), 300);
+    }
+
+    // 3. 서술형 문장 쓰기 AI 문맥 & 구조 정밀 채점
+    async function submitDescriptiveAnswer() {
+      if (isAnswered) return;
+      const inputEl = document.getElementById('desc-input');
+      const userSentence = inputEl.value.trim();
+      if (!userSentence) {
+        alert("문장을 작성해 주세요!");
+        inputEl.focus();
+        return;
+      }
+
+      const targetWord = currentQuiz.word;
+      const targetMeaning = currentQuiz.meaning;
+      const words = userSentence.split(/\s+/).filter(w => w.length > 0);
+      const lowerSentence = userSentence.toLowerCase();
+      const targetLower = targetWord.toLowerCase();
+      const hasTarget = lowerSentence.includes(targetLower);
+
+      // [1차 방어막: 초등 문맥 및 문장 구성 사전 검증]
+      // 1) 미션 단어가 전혀 없거나 외계어/난타(dlsfksdoiw 등)인 경우 -> 즉시 1점
+      if (!hasTarget) {
+        finishGrading({
+          score: 1,
+          comment: `💡 미션 단어 '${targetWord}'가 문장에 없거나 유효한 문장이 아니에요! '${targetWord}'를 꼭 넣어서 문장을 완성해 보세요. (예: "I like ${targetWord}.")`
+        }, userSentence);
+        return;
+      }
+
+      // 2) 미션 단어만 딸랑 1개 적은 경우 -> 2점
+      if (words.length === 1 && words[0].toLowerCase() === targetLower) {
+        finishGrading({
+          score: 2,
+          comment: `💡 단어는 정확하지만 아직 문장이 아니에요! "This is a ${targetWord}."처럼 주어와 동사를 넣어 완전한 문장으로 만들어 볼까요?`
+        }, userSentence);
+        return;
+      }
+
+      // [2차: Google Gemini AI 정밀 문맥 채점]
+      const apiKey = localStorage.getItem("GEMINI_API_KEY");
+      if (!apiKey) {
+        // API 키가 없으면 로컬 정밀 문맥 엔진으로 즉시 공정 채점
+        const localResult = evaluateStrictFallback(userSentence, targetWord, targetMeaning, currentGrade);
+        finishGrading(localResult, userSentence);
+        return;
+      }
+
+      isAnswered = true;
+      inputEl.disabled = true;
+      document.getElementById('desc-submit-btn').disabled = true;
+      document.getElementById('loading-spinner-box').style.display = 'block';
+
+      let gradeResult = null;
+
+      try {
+        const promptText = `너는 대한민국 2022 개정 초등영어 교육과정 전문 AI 채점 선생님이야.
+초등학생 (${currentGrade === '34' ? '3~4학년 새싹반' : '5~6학년 열매반'})이 작성한 서술형 영어 문장의 맥락과 문장 구성을 정밀하게 검토해줘.
+
+[미션 단어]: ${targetWord} (${targetMeaning})
+[학생 작성 문장]: "${userSentence}"
+
+[엄격한 채점 기준표 (1~5점)]:
+- 1점: 무의미한 자판 난타(dlsfksdoiw 등), 미션 단어 미포함, 한국어만 작성, 영어 문장이 아님
+- 2점: 미션 단어만 단독으로 썼거나 문장 형식을 전혀 갖추지 못한 불완전한 조각
+- 3점: 미션 단어를 썼으나 주어나 동사가 빠져 문맥이 어색하거나 심한 문법 오류가 있음
+- 4점: 미션 단어를 활용해 문맥이 통하는 문장을 썼으나 관사(a/the)나 사소한 철자 실수가 1개 있음
+- 5점: 미션 단어를 정확히 사용하고 초등 수준에 맞는 주어+동사 문장 구조를 완벽하게 갖춘 훌륭한 문장
+
+반드시 아래 JSON 포맷으로만 응답해:
+{
+  "score": (1부터 5 사이의 정수),
+  "comment": "초등학생 눈높이에 맞춘 다정한 칭찬 및 문맥 교정 피드백 (1~2문장)"
+}`;
+
+        // Google AI Studio 표준 안정화 모델(gemini-1.5-flash) 호출
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`;
+        const resp = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }],
+            generationConfig: {
+              temperature: 0.1,
+              responseMimeType: "application/json"
+            }
+          })
+        });
+
+        if (resp.ok) {
+          const data = await resp.json();
+          const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
+          gradeResult = JSON.parse(rawText);
+        } else {
+          console.warn("Gemini API 응답 오류(HTTP " + resp.status + "), 로컬 정밀 채점으로 안전 전환");
+          gradeResult = evaluateStrictFallback(userSentence, targetWord, targetMeaning, currentGrade);
+        }
+      } catch (err) {
+        console.error("AI 채점 통신 오류:", err);
+        gradeResult = evaluateStrictFallback(userSentence, targetWord, targetMeaning, currentGrade);
+      }
+
+      finishGrading(gradeResult, userSentence);
+    }
+
+    // 초등 영어 문장 구성 & 맥락 로컬 정밀 판정기
+    function evaluateStrictFallback(sentence, targetWord, meaning, grade) {
+      const words = sentence.trim().split(/\s+/).filter(w => w.length > 0);
+      const lower = sentence.toLowerCase();
+      const targetLower = targetWord.toLowerCase();
+
+      // 미션 단어 미포함
+      if (!lower.includes(targetLower)) {
+        return {
+          score: 1,
+          comment: `미션 단어인 '${targetWord}'가 포함되지 않았어요. '${targetWord}'를 넣어서 문장을 완성해 볼까요?`
+        };
+      }
+
+      // 1단어만 작성
+      if (words.length <= 1) {
+        return {
+          score: 2,
+          comment: `단어 하나만으로는 문장이 완성되지 않아요. "I like ${targetWord}."처럼 주어와 동사를 넣어보세요!`
+        };
+      }
+
+      // 2단어 (구 형태)
+      if (words.length === 2) {
+        return {
+          score: 3,
+          comment: `단어 활용을 잘 시도했어요! "This is a ${targetWord}."처럼 완전한 문장으로 발전시켜 볼까요?`
+        };
+      }
+
+      // 3단어 이상: 초등 핵심 기본 문장 패턴 매칭
+      const patterns = [
+        /i\s+(like|love|have|see|want|eat|need|am)\b/i,
+        /(this|that|it)\s+is\b/i,
+        /(he|she|my\s+\w+)\s+(is|likes|has)\b/i,
+        /there\s+is\b/i,
+        /we\s+(like|have|are)\b/i
+      ];
+      const matchesPattern = patterns.some(p => p.test(sentence));
+
+      if (matchesPattern) {
+        return {
+          score: 5,
+          comment: `와! 미션 단어 '${targetWord}'를 넣어 문맥과 문장 구성을 완벽하게 완성했어요! 참 잘했어요 👏`
+        };
+      } else {
+        return {
+          score: 4,
+          comment: `미션 단어를 활용해 멋진 문장을 만들었어요! 대소문자와 마침표도 꼼꼼히 확인해 보세요 ✨`
+        };
+      }
+    }
+
+    // 채점 결과 화면 반영 공통 함수
+    function finishGrading(gradeResult, userSentence) {
+      document.getElementById('loading-spinner-box').style.display = 'none';
+      const inputEl = document.getElementById('desc-input');
+      isAnswered = true;
+      inputEl.disabled = true;
+      document.getElementById('desc-submit-btn').disabled = true;
+
+      const finalScore = Math.max(1, Math.min(5, gradeResult.score || 1));
+      const earnedPoints = finalScore * 2; // 1~5점 -> 2~10점 환산
+      score += earnedPoints;
+      if (finalScore >= 3) correctCount += 1;
+      document.getElementById('score-text').innerText = `⭐ ${score}점`;
+
+      playSound(finalScore >= 3);
+      if (finalScore >= 4) setMascotEmotion('happy');
+      else if (finalScore <= 2) setMascotEmotion('sad');
+      else setMascotEmotion('normal');
+
+      const resBox = document.getElementById('result-box');
+      const resTitle = document.getElementById('result-title');
+      const resDesc = document.getElementById('result-desc');
+      resBox.style.display = 'block';
+
+      resTitle.innerText = `🤖 AI 선생님 채점 결과: ⭐ ${finalScore} / 5점`;
+      resTitle.style.color = (finalScore >= 4) ? '#15803d' : ((finalScore >= 3) ? '#7e22ce' : '#b91c1c');
+      resDesc.innerHTML = `
+        <b>선생님 피드백:</b> ${gradeResult.comment}<br>
+        <span style="font-size: 14px; color: #64748b; margin-top: 6px; display: block;">
+          (내가 쓴 문장: "${userSentence}")
+        </span>
+      `;
+
+      setTimeout(() => speakAccent('en-US'), 300);
+    }
+
+    function handleNextClick() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < totalSessionQuestions) {
+        renderCurrentQuestion();
+      } else {
+        showFinishScreen();
+      }
+    }
+
+    function showFinishScreen() {
+      document.getElementById('quiz-screen').style.display = 'none';
+      document.getElementById('finish-screen').style.display = 'block';
+      playVictorySound();
+      setMascotEmotion('happy');
+
+      document.getElementById('finish-score-display').innerText = `${score}점`;
+      document.getElementById('finish-detail-display').innerText = `총 ${totalSessionQuestions}문제 중 ${correctCount}문제 정답 완주! 💕`;
+    }
+
+    /* ========================================================
+       오디오 및 사운드 효과
+       ======================================================== */
+    function playSound(isCorrect) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (isCorrect) {
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.45);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.45);
+      } else {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.35);
+      }
+    }
+
+    function playVictorySound() {
+      if (!audioCtx) return;
+      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.1);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime + idx * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + idx * 0.1 + 0.3);
+        osc.start(audioCtx.currentTime + idx * 0.1);
+        osc.stop(audioCtx.currentTime + idx * 0.1 + 0.3);
+      });
+    }
+
+    function speakAccent(langCode, customWord = null) {
+      const wordToSpeak = customWord || currentQuiz?.word;
+      if (!wordToSpeak) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(wordToSpeak);
+      utter.lang = langCode;
+      window.speechSynthesis.speak(utter);
+    }
+
+    /* 마스코트 표정 전환 */
+    function setMascotEmotion(emotion) {
+      const stage = document.getElementById('main-mascot');
+      if (emotion === 'happy') {
+        stage.classList.add('bounce');
+      } else {
+        stage.classList.remove('bounce');
+      }
+    }
+
+    function getSpeakerSvg() {
+      return `
+        <svg viewBox="0 0 24 24" fill="none" stroke="#854d0e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 5.5 L6.8 8.8 C6.4 9.1 5.9 9.3 5.4 9.3 H3.8 C2.8 9.3 2 10.1 2 11.1 V12.9 C2 13.9 2.8 14.7 3.8 14.7 H5.4 C5.9 14.7 6.4 14.9 6.8 15.2 L11 18.5 C11.8 19.1 13 18.5 13 17.5 V6.5 C13 5.5 11.8 4.9 11 5.5 Z" fill="#fef9c3"/>
+          <path d="M16.5 9.5 C17.8 10.8 17.8 13.2 16.5 14.5" />
+          <path d="M19.5 6.5 C22.5 9.5 22.5 14.5 19.5 17.5" />
+        </svg>
+      `;
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+  </script>
+</body>
+</html>
